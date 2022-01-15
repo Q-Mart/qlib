@@ -63,14 +63,14 @@ class Flowfield(
     r % num_rows
   }
 
-  def change_value_at(p: Point, v: Float) {
+  def change_value_at(p: Point, v: Float) = {
     val x = canvas_x_to_grid(p.x.toInt)
     val y = canvas_y_to_grid(p.y.toInt)
 
     grid(y)(x) = v
   }
 
-  def randomly_generate_values {
+  def randomly_generate_values = {
 
     val egen1 = new ExpressionGenerator(sketch)
     val egen2 = new ExpressionGenerator(sketch)
@@ -92,7 +92,7 @@ class Flowfield(
     }
   }
 
-  def draw_arrows() {
+  def draw_arrows() = {
     for (col <- 0 to num_columns-1) {
       for (row <- 0 to num_rows-1) {
         val (x1, y1) = (grid_to_canvas_x(col), grid_to_canvas_y(row))
@@ -136,8 +136,8 @@ class Flowfield(
     num_steps: Int=500
     ): List[Point] = get_points_on_curve(List(start), step_size, num_steps)
 
-  def draw_curve(ps: List[Point]) {
-    draw_line_from_points(sketch, ps)
+  def draw_curve(ps: List[Point]) = {
+    Utils.draw_line_from_points(sketch, ps)
   }
 
   def copy: Flowfield = {

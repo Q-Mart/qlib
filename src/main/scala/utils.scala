@@ -1,5 +1,9 @@
 package qlib
 
+import processing.core._
+import PConstants._
+import PApplet._
+
 import scala.util.Random
 
 case class Point(val x: Float, val y: Float)
