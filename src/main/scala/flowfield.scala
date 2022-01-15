@@ -137,17 +137,7 @@ class Flowfield(
     ): List[Point] = get_points_on_curve(List(start), step_size, num_steps)
 
   def draw_curve(ps: List[Point]) {
-    sketch.beginShape(LINES)
-    ps.sliding(2).foreach {
-      case List(p1, p2) => {
-        sketch.vertex(p1.x, p1.y)
-        sketch.vertex(p2.x, p2.y)
-      }
-      case List(p1) => {
-        sketch.vertex(p1.x, p1.y)
-      }
-    }
-    sketch.endShape()
+    draw_line_from_points(sketch, ps)
   }
 
   def copy: Flowfield = {
