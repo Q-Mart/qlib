@@ -9,6 +9,14 @@ import scala.util.Random
 case class Point(val x: Float, val y: Float)
 
 object Utils {
+  def random_range(min: Int, max: Int): Int = {
+    min + Random.nextInt( (max - min) + 1 )
+  }
+
+  def random_float_range(min: Float, max: Float): Float = {
+    min + random_float( (max - min) + 1 )
+  }
+
   def random_float(max: Float): Float = Random.nextFloat * max
 
   def random_gaussian(mean: Float, std_dev: Float): Float = {
