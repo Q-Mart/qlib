@@ -129,7 +129,7 @@ class WatercolourPainter(sketch: PApplet) {
 
   def draw(opacity: Float = 10) = {
     for (pp <- paint_points) {
-      sketch.fill(pp.colval_1, pp.colval_2, pp.colval_3, 10)
+      sketch.fill(pp.colval_1, pp.colval_2, pp.colval_3, opacity)
 
       for (l <- pp.layers) {
         sketch.beginShape()
