@@ -140,4 +140,22 @@ class WatercolourPainter(sketch: PApplet) {
       }
     }
   }
+
+  def draw_overlapping(opacity: Float = 10) = {
+    val num_layers = paint_points(0).layers.length
+
+    for (i <- 0 until num_layers) {
+      for (pp <- paint_points) {
+        sketch.fill(pp.colval_1, pp.colval_2, pp.colval_3, 10)
+
+        val l = pp.layers(i)
+        sketch.beginShape()
+        for (p <- l.points) {
+          sketch.vertex(p.x, p.y)
+        }
+
+        sketch.endShape()
+      }
+    }
+  }
 }
