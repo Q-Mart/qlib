@@ -6,15 +6,7 @@ import PApplet._
 
 case class Polygon(points: Array[Point], center: Point)
 
-case class PaintPoint(
-    colval_1: Float,
-    colval_2: Float,
-    colval_3: Float,
-    layers: Array[Polygon]
-)
-
 class WatercolourPainter(sketch: PApplet) {
-  var paint_points: Array[PaintPoint] = Array()
 
   private def polygon(
       x: Float,
@@ -87,33 +79,37 @@ class WatercolourPainter(sketch: PApplet) {
 
   private def deform_and_layer(
       shape: Polygon,
-      colour: Tuple3[Float, Float, Float]
+      colour: Tuple3[Float, Float, Float],
+      opacity: Float
   ) = {
     val base = deform(shape, 3)
 
-    var layers: Array[Polygon] = Array()
+    sketch.fill(colour._1, colour._2, colour._3, opacity)
     for (i <- 0 to 50) {
-      layers = layers :+ deform(base, 3)
+      val deformation = deform(base, 3)
+      sketch.beginShape()
+      for (p <- deformation.points) {
+        sketch.vertex(p.x, p.y)
+      }
+      sketch.endShape()
     }
-
-    PaintPoint(colour._1, colour._2, colour._3, layers)
   }
 
   def paint_at(
       x: Float,
       y: Float,
       r: Float = 50,
-      colour: Tuple3[Float, Float, Float]
+      colour: Tuple3[Float, Float, Float],
+      opacity: Float = 10
   ) = {
-    val paint_point = deform_and_layer(polygon(x, y, r, 10), colour)
-
-    paint_points = paint_points :+ paint_point
+    deform_and_layer(polygon(x, y, r, 10), colour, opacity)
   }
 
-  def paint_custom_shape(
+  def paint_custom_shape_at(
       points: Array[Point],
       r: Float = 50,
-      colour: Tuple3[Float, Float, Float]
+      colour: Tuple3[Float, Float, Float],
+      opacity: Float = 10
   ) = {
     val dx = points.head.x - points.last.x
     val dy = points.head.y - points.last.y
@@ -122,40 +118,6 @@ class WatercolourPainter(sketch: PApplet) {
     val cy = points.head.y - dy
 
     val shape = Polygon(points, Point(cx, cy))
-    val paint_point = deform_and_layer(shape, colour)
-
-    paint_points = paint_points :+ paint_point
-  }
-
-  def draw(opacity: Float = 10) = {
-    for (pp <- paint_points) {
-      sketch.fill(pp.colval_1, pp.colval_2, pp.colval_3, opacity)
-
-      for (l <- pp.layers) {
-        sketch.beginShape()
-        for (p <- l.points) {
-          sketch.vertex(p.x, p.y)
-        }
-        sketch.endShape()
-      }
-    }
-  }
-
-  def draw_overlapping(opacity: Float = 10) = {
-    val num_layers = paint_points(0).layers.length
-
-    for (i <- 0 until num_layers) {
-      for (pp <- paint_points) {
-        sketch.fill(pp.colval_1, pp.colval_2, pp.colval_3, 10)
-
-        val l = pp.layers(i)
-        sketch.beginShape()
-        for (p <- l.points) {
-          sketch.vertex(p.x, p.y)
-        }
-
-        sketch.endShape()
-      }
-    }
+    deform_and_layer(shape, colour, opacity)
   }
 }
