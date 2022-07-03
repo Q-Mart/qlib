@@ -79,12 +79,12 @@ class WatercolourPainter(sketch: PApplet) {
 
   private def deform_and_layer(
       shape: Polygon,
-      colour: Tuple3[Float, Float, Float],
+      colour: Int,
       opacity: Float
   ) = {
     val base = deform(shape, 3)
 
-    sketch.fill(colour._1, colour._2, colour._3, opacity)
+    sketch.fill(colour, opacity)
     for (i <- 0 to 50) {
       val deformation = deform(base, 3)
       sketch.beginShape()
@@ -99,7 +99,7 @@ class WatercolourPainter(sketch: PApplet) {
       x: Float,
       y: Float,
       r: Float = 50,
-      colour: Tuple3[Float, Float, Float],
+      colour: Int,
       opacity: Float = 10
   ) = {
     deform_and_layer(polygon(x, y, r, 10), colour, opacity)
@@ -108,7 +108,7 @@ class WatercolourPainter(sketch: PApplet) {
   def paint_custom_shape_at(
       points: Array[Point],
       r: Float = 50,
-      colour: Tuple3[Float, Float, Float],
+      colour: Int,
       opacity: Float = 10
   ) = {
     val dx = points.head.x - points.last.x
