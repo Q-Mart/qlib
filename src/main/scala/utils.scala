@@ -7,7 +7,9 @@ import PApplet._
 import scala.util.Random
 import scala.annotation.tailrec
 
-case class Point(val x: Float, val y: Float)
+case class Point(val x: Float, val y: Float) {
+  def toPVector = new PVector(x, y)
+}
 
 object Utils {
   def random_range(min: Int, max: Int): Int = {
