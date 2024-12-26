@@ -1,45 +1,42 @@
-# bloop and metals
-.bloop
-.bsp
-
-# metals
-project/metals.sbt
-.metals
-
-# vs code
-.vscode
-
-# scala 3
-.tasty
-
-# sbt
-project/project/
-project/target/
-target/
-
-# eclipse
+.gradle
 build/
-.classpath
-.project
-.settings
-.worksheet
-bin/
-.cache
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# intellij idea
-*.log
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
 *.iml
 *.ipr
-*.iws
-.idea
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# mac
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
 .DS_Store
-
-# other?
-.history
-.scala_dependencies
-.cache-main
-
-#general
-*.class
