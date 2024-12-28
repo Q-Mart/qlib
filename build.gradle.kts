@@ -24,6 +24,14 @@ dependencies {
     implementation("com.github.micycle1:processing-core-4:4.3.3")
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
