@@ -1,4 +1,4 @@
-package uk.qumarth;
+package uk.qumarth.qlib;
 
 import processing.core.PVector;
 
