@@ -31,16 +31,20 @@ public class Border {
     }
 
     private final BorderType type;
+
+    private final PApplet app;
+
     private final PVector start;
     private final PVector end;
 
     public Border(BorderType type, PApplet app) {
         this.type = type;
-        this.start = calculateStart(app);
-        this.end = calculateEnd(app);
+        this.app = app;
+        this.start = calculateStart();
+        this.end = calculateEnd();
     }
 
-    private PVector calculateStart(PApplet app) {
+    private PVector calculateStart() {
         float totalImageWidth = app.width / 1.1f;
         float x = totalImageWidth * 0.05f;
 
@@ -59,7 +63,7 @@ public class Border {
         return new PVector(x, y);
     }
 
-    private PVector calculateEnd(PApplet app) {
+    private PVector calculateEnd() {
         float totalImageWidth = app.width / 1.1f;
         float x = start.x + totalImageWidth;
 
@@ -76,5 +80,12 @@ public class Border {
 
     public PVector getEnd() {
         return end;
+    }
+
+    public void draw() {
+        app.rect(0, 0, app.width, getStart().y);
+        app.rect(0, 0, getStart().x, app.height);
+        app.rect(0, getEnd().y, app.width, app.height);
+        app.rect(getEnd().x, 0, app.width, app.height);
     }
 }
