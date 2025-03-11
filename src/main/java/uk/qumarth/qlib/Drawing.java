@@ -32,7 +32,30 @@ public class Drawing {
         });
     }
 
-    public static void drawNaturalLine(PVector start, PVector end, Random r, PApplet sketch) {
+    public static List<PVector> chaikinCurveSmoothing(List<PVector> points, int n) {
+        List<PVector> currentChaikinPoints = points;
+        for (int i=0; i<n; i++) {
+            currentChaikinPoints = singleChaikinStep(currentChaikinPoints);
+        }
+
+        return currentChaikinPoints;
+    }
+
+    public static void drawNaturalLine(PVector start, PVector end, int iterations, Random r, PApplet sketch) {
+        int transparentCol = Colour.addAlphaToHSBColour(sketch.g.fillColor, 1f / iterations, sketch);
+
+        // Wobble points from coords to create a base line
+        List<PVector> baseLine = wobbleLine(start, end, r, sketch);
+        baseLine = chaikinCurveSmoothing(baseLine, 4);
+
+        sketch.beginShape();
+        for (PVector vec: baseLine) {
+            sketch.vertex(vec.x, vec.y);
+        }
+        sketch.endShape();
+    }
+
+    private static List<PVector> wobbleLine(PVector start, PVector end, Random r, PApplet sketch) {
         // Add a random slant
         PVector slantedStart = addNoiseToPVector(start, r, sketch);
         PVector slantedEnd = addNoiseToPVector(end, r, sketch);
@@ -51,17 +74,40 @@ public class Drawing {
 
         points.add(slantedEnd);
 
-        sketch.beginShape();
-        for (PVector point: points) {
-            sketch.vertex(point.x, point.y);
+        return points;
+    }
+
+    private static List<PVector> singleChaikinStep(List<PVector> points) {
+        List<PVector> result = new ArrayList<>();
+
+        // Sliding window over two points
+        result.add(points.getFirst());
+        for (int i=0; i<points.size()-2; i++) {
+            PVector p0 = points.get(i);
+            PVector p1 = points.get(i+1);
+
+            PVector q = new PVector(
+                    (.75f * p0.x) + (0.25f * p1.x),
+                    (.75f * p0.y) + (0.25f * p1.y)
+            );
+
+            PVector r = new PVector(
+                    (.25f * p0.x) + (0.75f * p1.x),
+                    (.25f * p0.y) + (0.75f * p1.y)
+            );
+
+            result.add(q);
+            result.add(r);
+            result.add(p1);
         }
-        sketch.endShape();
+
+        return result;
     }
 
     private static PVector addNoiseToPVector(PVector v, Random r, PApplet sketch) {
         return new PVector(
-                v.x + RandomUtils.randomGaussian(sketch.width/100000f, sketch.width/1000f, r),
-                v.y + RandomUtils.randomGaussian(sketch.height/100000f, sketch.height/1000f, r)
+                v.x + RandomUtils.randomGaussian(sketch.width/100000f, sketch.width/100000f, r),
+                v.y + RandomUtils.randomGaussian(sketch.height/100000f, sketch.height/100000f, r)
         );
     }
 }
