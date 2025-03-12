@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class NaturalLine {
-
-    public static void draw(PVector start, PVector end, Random r, PApplet sketch) {
-        // Wobble points from coords to create a base line
-        List<PVector> baseLine = createBaseLine(start, end, r);
+    public static void draw(List<PVector> points, Random r, PApplet sketch) {
+        List<PVector> baseLine = points.stream().map(p -> baselineNoise(p, r)).toList();
         baseLine = Drawing.chaikinCurveSmoothing(baseLine, 4);
         baseLine = smooth(baseLine);
 
@@ -26,28 +24,26 @@ public class NaturalLine {
         }
     }
 
-    /**
-     * Take vectors for the start and end points of a line, and create points inbetween with
-     * a change in the y axis
-     */
-    private static List<PVector> createBaseLine(PVector start, PVector end, Random r) {
-        // Add a random slant
-        PVector slantedStart = baselineNoise(start, r);
-        PVector slantedEnd = baselineNoise(end, r);
+    public static void draw(PVector start, PVector end, Random r, PApplet sketch) {
+        List<PVector> baseLine = createInterpolatedPoints(start, end, r);
+        draw(baseLine, r, sketch);
+    }
+
+    private static List<PVector> createInterpolatedPoints(PVector start, PVector end, Random r) {
+        List<PVector> points = new ArrayList<>();
+        points.add(start);
 
         // Interpolate points and add wobble
-        List<PVector> points = new ArrayList<>();
-        points.add(slantedStart);
         for (float interpolationAmount = 0.1f; interpolationAmount < 1f; interpolationAmount += 0.05f) {
             PVector nextPoint = new PVector(
-                    PApplet.lerp(slantedStart.x, slantedEnd.x, interpolationAmount),
-                    PApplet.lerp(slantedStart.y, slantedEnd.y, interpolationAmount)
+                    PApplet.lerp(start.x, end.x, interpolationAmount),
+                    PApplet.lerp(start.y, end.y, interpolationAmount)
             );
 
             points.add(baselineNoise(nextPoint, r));
         }
 
-        points.add(slantedEnd);
+        points.add(end);
 
         return points;
     }
