@@ -36,6 +36,7 @@ public class PaperMarbling {
         }
 
         for (InkDrop drop : drops) {
+            drop.tine(new PVector(10, 10), RandomUtils.randomPVector2(1f, 1f, r), 60,20);
             sketch.fill(RandomUtils.randomRange(0, 360, r));
             drop.draw(sketch);
         }

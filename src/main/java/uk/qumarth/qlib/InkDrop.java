@@ -10,7 +10,7 @@ import static processing.core.PApplet.*;
 import static processing.core.PConstants.TWO_PI;
 
 public class InkDrop {
-    private static final int NUMBER_OF_VERTICES = 100;
+    private static final int NUMBER_OF_VERTICES = 500;
 
     private final PVector center;
     private final List<PVector> vertices;
@@ -54,6 +54,20 @@ public class InkDrop {
             tmp.add(c);
 
             vertex.set(tmp);
+        }
+    }
+
+    public void tine(PVector startPoint, PVector tineVector, float z, float c) {
+        // TODO: understand this, and add more of the effects documented
+        tineVector.normalize();
+
+        float u = 1 / (pow(2, 1/c));
+        for (PVector vertex : vertices) {
+            PVector pb = vertex.copy().sub(startPoint);
+            float d = abs(pb.dot(tineVector.copy().rotate(HALF_PI)));
+
+            float mag = z * pow(u,d);
+            vertex.add(tineVector.copy().mult(mag));
         }
     }
 
