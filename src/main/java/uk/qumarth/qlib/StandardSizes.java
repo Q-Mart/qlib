@@ -10,6 +10,17 @@ public enum StandardSizes {
     A4(new PVector(2480, 3508)),
     A5(new PVector(1748, 2480));
 
+    private final PVector vec;
+
     StandardSizes(PVector pVector) {
+        vec = pVector;
+    }
+
+    public float width() {
+        return vec.x;
+    }
+
+    public float height() {
+        return vec.y;
     }
 }
