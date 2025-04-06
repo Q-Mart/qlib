@@ -13,49 +13,71 @@ public class Drawing {
     public record Polygon(PVector center, List<PVector> points) {};
 
     public static void drawLineFromPVectors(List<PVector> pVectors, PApplet sketch) {
-        sketch.beginShape(PConstants.LINES);
+        drawLineFromPVectors(pVectors, sketch.g.fillColor, sketch);
+    }
 
-        Stream<List<PVector>> slidingWindow = IntStream.range(0, pVectors.size() - 1)
-                .mapToObj(start -> pVectors.subList(start, start + 2));
+    public static void drawLineFromPVectors(List<PVector> pVectors, int colour, PApplet sketch) {
+        synchronized (sketch) {
+            int previousCol = sketch.g.strokeColor;
+            sketch.stroke(colour);
 
-        slidingWindow.forEach(window -> {
-            if (window.size() == 2) {
-                PVector v1 = window.getFirst();
-                PVector v2 = window.getLast();
+            sketch.beginShape(PConstants.LINES);
 
-                sketch.vertex(v1.x, v1.y);
-                sketch.vertex(v2.x, v2.y);
-            } else if (window.size() == 1) {
-                PVector v1 = window.getFirst();
+            Stream<List<PVector>> slidingWindow = IntStream.range(0, pVectors.size() - 1)
+                    .mapToObj(start -> pVectors.subList(start, start + 2));
 
-                sketch.vertex(v1.x, v1.y);
-            }
-        });
+            slidingWindow.forEach(window -> {
+                if (window.size() == 2) {
+                    PVector v1 = window.getFirst();
+                    PVector v2 = window.getLast();
 
-        sketch.endShape();
+                    sketch.vertex(v1.x, v1.y);
+                    sketch.vertex(v2.x, v2.y);
+                } else if (window.size() == 1) {
+                    PVector v1 = window.getFirst();
+
+                    sketch.vertex(v1.x, v1.y);
+                }
+            });
+
+            sketch.endShape();
+
+            sketch.stroke(previousCol);
+        }
     }
 
     public static void drawShapeFromPVectors(List<PVector> pVectors, PApplet sketch) {
-        sketch.beginShape();
+        drawShapeFromPVectors(pVectors, sketch.g.fillColor, sketch);
+    }
 
-        Stream<List<PVector>> slidingWindow = IntStream.range(0, pVectors.size() - 1)
-                .mapToObj(start -> pVectors.subList(start, start + 2));
+    public static void drawShapeFromPVectors(List<PVector> pVectors, int colour, PApplet sketch) {
+        synchronized (sketch) {
+            int previousCol = sketch.g.fillColor;
+            sketch.fill(colour);
 
-        slidingWindow.forEach(window -> {
-            if (window.size() == 2) {
-                PVector v1 = window.getFirst();
-                PVector v2 = window.getLast();
+            sketch.beginShape();
 
-                sketch.vertex(v1.x, v1.y);
-                sketch.vertex(v2.x, v2.y);
-            } else if (window.size() == 1) {
-                PVector v1 = window.getFirst();
+            Stream<List<PVector>> slidingWindow = IntStream.range(0, pVectors.size() - 1)
+                    .mapToObj(start -> pVectors.subList(start, start + 2));
 
-                sketch.vertex(v1.x, v1.y);
-            }
-        });
+            slidingWindow.forEach(window -> {
+                if (window.size() == 2) {
+                    PVector v1 = window.getFirst();
+                    PVector v2 = window.getLast();
 
-        sketch.endShape();
+                    sketch.vertex(v1.x, v1.y);
+                    sketch.vertex(v2.x, v2.y);
+                } else if (window.size() == 1) {
+                    PVector v1 = window.getFirst();
+
+                    sketch.vertex(v1.x, v1.y);
+                }
+            });
+
+            sketch.endShape();
+
+            sketch.fill(previousCol);
+        }
     }
 
     public static List<PVector> chaikinCurveSmoothing(List<PVector> points, int n) {

@@ -15,7 +15,7 @@ public class Watercolour {
 
     public static void draw(PVector point, int colour, float radius, Random random, PApplet sketch) {
         int previousColor = sketch.g.fillColor;
-        setNewColourWithAlpha(colour, sketch);
+        int colourWithAlpha = colourWithAlpha(colour, sketch);
 
         Drawing.Polygon p = polygon(point, radius, 10);
 
@@ -23,7 +23,7 @@ public class Watercolour {
         // Create a base shape
         for (int i=0; i<10; i++) {
             p = deform(p, random);
-            Drawing.drawShapeFromPVectors(p.points(), sketch);
+            Drawing.drawShapeFromPVectors(p.points(), colourWithAlpha, sketch);
         }
 
         // Deform the layer deformations of the base shape
@@ -32,7 +32,7 @@ public class Watercolour {
                     deform(deform(p, random), random),
                     random
             );
-            Drawing.drawLineFromPVectors(deformed3Times.points(), sketch);
+            Drawing.drawShapeFromPVectors(deformed3Times.points(), colourWithAlpha, sketch);
         }
 
         sketch.color(previousColor);
@@ -73,7 +73,7 @@ public class Watercolour {
             var diff = p1.copy().sub(p2);
 
             // Use dy and dx to get a point between p1 and p2
-            float factor = RandomUtils.randomGaussian(0.3f, 0.1f, random);
+            float factor = RandomUtils.randomGaussian(0.5f, 0.1f, random);
             var newPointBetweenP1AndP2 = p1.copy().sub(diff.copy().mult(factor));
 
             var vectorFromCenterToNewPoint = newPointBetweenP1AndP2.copy().sub(polygon.center());
@@ -96,11 +96,11 @@ public class Watercolour {
         return new Drawing.Polygon(polygon.center(), newPoints);
     }
 
-    private static void setNewColourWithAlpha(int colour, PApplet sketch) {
+    private static int colourWithAlpha(int colour, PApplet sketch) {
         float h = sketch.hue(colour);
         float s = sketch.saturation(colour);
         float b = sketch.brightness(colour);
 
-        sketch.fill(h, s, b, 7f);
+        return sketch.color(h, s, b, 7f);
     }
 }
